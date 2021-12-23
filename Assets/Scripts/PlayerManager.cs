@@ -18,18 +18,12 @@ public class PlayerManager : MonoBehaviour
     private bool isJumping = false;
 
     private const int maxHp = 3;
-    private int playerHp;
+    public int curHp;
 
-    private bool isMove = true;
-
-    private bool isDamage;
-    private bool isDamageAble;
-    private const float maxDamageDelayTime = 1.0f;
     private float curDamageDelayTime = 0.0f;
+    private const float maxDamageDelayTime = 1.0f;
 
     private RaycastHit2D raycastJumpHit;
-    private RaycastHit2D raycastLeftHit;
-    private RaycastHit2D raycastRightHit;
 
 
     private void Start()
@@ -38,29 +32,28 @@ public class PlayerManager : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
-        playerHp = maxHp;
+        curHp = maxHp;
 
 
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        isDamage = true;
-        if(collision.gameObject.CompareTag("Trap") && isDamageAble == true)
+
+        if(collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime)
         {
-            --playerHp;
+            --curHp;
+            curDamageDelayTime = 0.0f;
         }
-        isDamageAble = false;
-        Debug.Log(playerHp);
+        Debug.Log(curHp);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (raycastJumpHit.collider != null)
         {
-            if (raycastJumpHit.distance <= 0.5)
+            if (raycastJumpHit.distance <= 10.0f)
             {
-                Debug.Log(isJumping);
                 isJumping = false;
                 animator.SetBool("isJump", false);
             }
@@ -69,37 +62,26 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(isJumping);
+        
+        curDamageDelayTime += Time.deltaTime;
 
-        if(isDamage == true)
-        {
-            curDamageDelayTime += Time.deltaTime;
-            if(curDamageDelayTime >= maxDamageDelayTime)
-            {
-                curDamageDelayTime = 0.0f;
-                isDamageAble = true;
-                isDamage = false;
-            }
-        }
-
-        if(playerHp == 0)
+        if(curHp == 0)
         {
             Destroy(gameObject);
         }
 
         raycastJumpHit = Physics2D.Raycast(rb.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
-        raycastLeftHit = Physics2D.Raycast(rb.position, Vector2.left, 1, LayerMask.GetMask("Ground"));
-        raycastRightHit = Physics2D.Raycast(rb.position, Vector2.right, 1, LayerMask.GetMask("Ground"));
 
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
 
         if(Input.GetButtonDown("Horizontal"))
         {
-            spriteRenderer.flipX = moveHorizontal == -1;
+            spriteRenderer.flipX = moveHorizontal < 0;
         }
-
         Vector2 dir = new Vector2(moveHorizontal, 0);
 
-        if(dir.x == 1.0f || dir.x == -1.0f)
+        if((dir.x == 1.0f || dir.x == -1.0f) && isJumping == false)
         {
             animator.SetBool("isMove", true);
         }
@@ -108,31 +90,18 @@ public class PlayerManager : MonoBehaviour
             animator.SetBool("isMove", false);
         }
 
-        if(raycastLeftHit.collider != null || raycastRightHit.collider != null)
-        {
-            if(raycastLeftHit.distance ==0.0f || raycastRightHit.distance == 0.0f)
-            {
-                isMove = false;
-            }
-        }
-        else
-        {
-            isMove = true;
-        }
-        if(isMove == true)
-        {
-            transform.Translate(dir * Time.deltaTime * moveSpeed);
-        }
+        transform.Translate(dir * Time.deltaTime * moveSpeed);
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             if (isJumping == false)
             {
-                animator.SetBool("isJump", true);
+              animator.SetBool("isJump", true);
+                animator.SetBool("isMove", false);
                 isJumping = true;
-                GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpPower);
-                Debug.Log(isJumping);
+              GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpPower);
+              Debug.Log(isJumping);
             }
             else return;
         }
