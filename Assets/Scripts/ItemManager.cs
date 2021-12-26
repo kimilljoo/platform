@@ -6,10 +6,12 @@ public class ItemManager : MonoBehaviour
 {
     private PlayerManager player;
     private GameManager gameManager;
+    private UiManager uiManager;
     private void Start()
     {
         player = GameObject.Find("Player").GetComponent<PlayerManager>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -23,9 +25,17 @@ public class ItemManager : MonoBehaviour
             }
             else if(gameObject.name == "Heart")
             {
-                ++player.curHp;
-                Debug.Log(player.curHp);
-                Destroy(gameObject);
+                if(player.maxHp == player.curHp)
+                {
+                    gameManager.score += 500;
+                }
+                else
+                {
+                    ++player.curHp;
+                    Debug.Log(player.curHp);
+                    uiManager.SetHp(player.curHp, player.maxHp);
+                    Destroy(gameObject);
+                }
             }
         }
     }

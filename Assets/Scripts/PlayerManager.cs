@@ -17,7 +17,7 @@ public class PlayerManager : MonoBehaviour
 
     private bool isJumping = false;
 
-    private const int maxHp = 3;
+    public int maxHp = 3;
     public int curHp;
 
     private float curDamageDelayTime = 0.0f;
@@ -25,13 +25,14 @@ public class PlayerManager : MonoBehaviour
 
     private RaycastHit2D raycastJumpHit;
 
+    private UiManager uiManager;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-
+        uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
         curHp = maxHp;
 
 
@@ -43,6 +44,7 @@ public class PlayerManager : MonoBehaviour
         if(collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime)
         {
             --curHp;
+            uiManager.SetHp(curHp, maxHp);
             curDamageDelayTime = 0.0f;
         }
         Debug.Log(curHp);
