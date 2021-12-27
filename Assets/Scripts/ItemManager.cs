@@ -28,6 +28,8 @@ public class ItemManager : MonoBehaviour
                 if(player.maxHp == player.curHp)
                 {
                     gameManager.score += 500;
+                    Destroy(gameObject);
+
                 }
                 else
                 {

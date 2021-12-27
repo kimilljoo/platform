@@ -5,6 +5,12 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
 
+    [SerializeField]
+    private GameObject bullet;
+
+    [SerializeField]
+    private GameObject shootPoint;
+
     private float moveSpeed = 3.0f;
 
     private float jumpPower = 5.0f;
@@ -27,6 +33,8 @@ public class PlayerManager : MonoBehaviour
 
     private UiManager uiManager;
 
+    private float jumpErrorTime = 0.0f;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -47,6 +55,12 @@ public class PlayerManager : MonoBehaviour
             uiManager.SetHp(curHp, maxHp);
             curDamageDelayTime = 0.0f;
         }
+        if(collision.gameObject.CompareTag("DeathZone"))
+        {
+            --curHp;
+            uiManager.SetHp(curHp, maxHp);
+            transform.position = new Vector3(0, 0, -1);
+        }
         Debug.Log(curHp);
     }
 
@@ -54,16 +68,28 @@ public class PlayerManager : MonoBehaviour
     {
         if (raycastJumpHit.collider != null)
         {
-            if (raycastJumpHit.distance <= 10.0f)
+            if (raycastJumpHit.distance <= 0.5f)
             {
-                isJumping = false;
-                animator.SetBool("isJump", false);
+              isJumping = false;
+              jumpErrorTime = 0.0f;
+              animator.SetBool("isJump", false);
             }
         }
     }
 
     private void Update()
     {
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+
+        if(Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Instantiate(bullet, shootPoint.transform.position, Quaternion.identity);
+        }
+
+        if(Input.GetButtonDown("Horizontal"))
+        {
+            spriteRenderer.flipX = moveHorizontal < 0;
+        }
         Debug.Log(isJumping);
         
         curDamageDelayTime += Time.deltaTime;
@@ -72,15 +98,9 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+        
         raycastJumpHit = Physics2D.Raycast(rb.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
 
-        float moveHorizontal = Input.GetAxisRaw("Horizontal");
-
-        if(Input.GetButtonDown("Horizontal"))
-        {
-            spriteRenderer.flipX = moveHorizontal < 0;
-        }
         Vector2 dir = new Vector2(moveHorizontal, 0);
 
         if((dir.x == 1.0f || dir.x == -1.0f) && isJumping == false)
@@ -99,11 +119,11 @@ public class PlayerManager : MonoBehaviour
         {
             if (isJumping == false)
             {
-              animator.SetBool("isJump", true);
+                animator.SetBool("isJump", true);
                 animator.SetBool("isMove", false);
                 isJumping = true;
-              GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpPower);
-              Debug.Log(isJumping);
+                rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+                Debug.Log(isJumping);
             }
             else return;
         }

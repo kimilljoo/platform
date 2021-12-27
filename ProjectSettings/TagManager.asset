@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Trap
+  - DeathZone
+  - Bounce
   layers:
   - Default
   - TransparentFX

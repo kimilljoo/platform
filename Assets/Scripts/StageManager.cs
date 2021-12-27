@@ -9,7 +9,7 @@ public class StageManager : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            SceneManager.LoadScene("GameOverScene");
+            SceneManager.LoadScene("Stage2");
         }
     }
 }
