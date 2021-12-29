@@ -22,6 +22,6 @@ public class CameraControl : MonoBehaviour
             transform.position = new Vector3(0, 0, transform.position.z);
         }
         else
-            transform.position = new Vector3(targetTransform.position.x, targetTransform.position.y, transform.position.z);
+            transform.position = new Vector3(targetTransform.position.x, 0, transform.position.z);
     }
 }

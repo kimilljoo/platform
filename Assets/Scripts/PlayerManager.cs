@@ -13,9 +13,10 @@ public class PlayerManager : MonoBehaviour
 
     private float moveSpeed = 3.0f;
 
-    private float jumpPower = 5.0f;
+    private float jumpPower = 5.5f;
 
     private Rigidbody2D rb;
+    private BoxCollider2D bc;
 
     private Animator animator;
 
@@ -29,15 +30,14 @@ public class PlayerManager : MonoBehaviour
     private float curDamageDelayTime = 0.0f;
     private const float maxDamageDelayTime = 1.0f;
 
-    private RaycastHit2D raycastJumpHit;
+    private RaycastHit2D[] rayJumpHits;
 
     private UiManager uiManager;
-
-    private float jumpErrorTime = 0.0f;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        bc = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
@@ -66,44 +66,23 @@ public class PlayerManager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (raycastJumpHit.collider != null)
+
+        if (rayJumpHits[0].collider != null)
         {
-            if (raycastJumpHit.distance <= 0.5f)
+            if (rayJumpHits[0].distance <= 0.5f)
             {
-              isJumping = false;
-              jumpErrorTime = 0.0f;
-              animator.SetBool("isJump", false);
+                Debug.Log("ray dis : " + rayJumpHits[0].distance);
+                isJumping = false;
+                animator.SetBool("isJump", false);
             }
         }
     }
 
-    private void Update()
+    private void FixedUpdate()//ÀÌµ¿ 
     {
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
-
-        if(Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            Instantiate(bullet, shootPoint.transform.position, Quaternion.identity);
-        }
-
-        if(Input.GetButtonDown("Horizontal"))
-        {
-            spriteRenderer.flipX = moveHorizontal < 0;
-        }
-        Debug.Log(isJumping);
-        
-        curDamageDelayTime += Time.deltaTime;
-
-        if(curHp == 0)
-        {
-            Destroy(gameObject);
-        }
-        
-        raycastJumpHit = Physics2D.Raycast(rb.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
-
         Vector2 dir = new Vector2(moveHorizontal, 0);
-
-        if((dir.x == 1.0f || dir.x == -1.0f) && isJumping == false)
+        if ((dir.x == 1.0f || dir.x == -1.0f) && isJumping == false)
         {
             animator.SetBool("isMove", true);
         }
@@ -113,7 +92,6 @@ public class PlayerManager : MonoBehaviour
         }
 
         transform.Translate(dir * Time.deltaTime * moveSpeed);
-
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -127,6 +105,36 @@ public class PlayerManager : MonoBehaviour
             }
             else return;
         }
+    }
+
+    private void Update()
+    {
+        float moveHorizontal = Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Instantiate(bullet, shootPoint.transform.position, Quaternion.identity);
+        }
+
+        if(Input.GetButtonDown("Horizontal"))
+        {
+            spriteRenderer.flipX = moveHorizontal < 0;
+        }
+        
+        curDamageDelayTime += Time.deltaTime;
+
+        if(curHp == 0)
+        {
+            Destroy(gameObject);
+        }
+        
+        float colliderX = bc.transform.position.x + bc.size.x;
+        Vector2 rayPositionRight = new Vector2(colliderX, bc.transform.position.y);
+        rayJumpHits[0] = Physics2D.Raycast(bc.transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        rayJumpHits[1] = Physics2D.Raycast(rayPositionRight, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        Debug.DrawRay(bc.transform.position, Vector2.down, Color.blue);
+        Debug.DrawRay(rayPositionRight, Vector2.down, Color.blue);
+        
 
     }
 }
