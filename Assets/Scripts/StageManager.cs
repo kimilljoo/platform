@@ -5,23 +5,18 @@ using UnityEngine;
 
 public class StageManager : MonoBehaviour
 {
-    private int stageNum = 1;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        switch(SceneManager.GetActiveScene().buildIndex)
         {
-            ++stageNum;
-            Debug.Log(stageNum);
-            if(stageNum == 3)
-            {
+            case 0:
+                SceneManager.LoadScene(1);
+                break;
+            case 1:
+                SceneManager.LoadScene(2);
+                break;
 
-                SceneManager.LoadScene("GameOverScene");
-            }
-            else
-            {
-                SceneManager.LoadScene("Stage" + stageNum.ToString());
-            }
         }
     }
 }

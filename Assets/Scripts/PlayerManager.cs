@@ -30,19 +30,19 @@ public class PlayerManager : MonoBehaviour
     private float curDamageDelayTime = 0.0f;
     private const float maxDamageDelayTime = 1.0f;
 
-    private RaycastHit2D[] rayJumpHits;
+    private RaycastHit2D[] rayJumpHits = new RaycastHit2D[3];
 
     private UiManager uiManager;
 
     private void Start()
     {
+
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
         curHp = maxHp;
-
 
     }
 
@@ -62,20 +62,24 @@ public class PlayerManager : MonoBehaviour
             transform.position = new Vector3(0, 0, -1);
         }
         Debug.Log(curHp);
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (rayJumpHits[0].collider != null)
+        if ((rayJumpHits[0].collider != null || rayJumpHits[1].collider != null) || rayJumpHits[2].collider != null)
         {
-            if (rayJumpHits[0].distance <= 0.5f)
+            if ((rayJumpHits[0].distance <= 0.5f || rayJumpHits[1].distance <= 0.5f)|| rayJumpHits[2].distance <= 0.5f)
             {
-                Debug.Log("ray dis : " + rayJumpHits[0].distance);
+                Debug.Log("ray dis left : " + rayJumpHits[0].distance);
+                Debug.Log("ray dis right : " + rayJumpHits[1].distance);
+                Debug.Log("ray dis player : " + rayJumpHits[2].distance);
                 isJumping = false;
                 animator.SetBool("isJump", false);
             }
         }
+
     }
 
     private void FixedUpdate()//ÀÌµ¿ 
@@ -109,6 +113,9 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        Vector2 rayLeft = new Vector2(bc.transform.position.x - (bc.size.x/2)-0.039f, bc.transform.position.y);
+        Vector2 rayRight = new Vector2(bc.transform.position.x + (bc.size.x/2), bc.transform.position.y);
+
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -128,13 +135,12 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
         }
         
-        float colliderX = bc.transform.position.x + bc.size.x;
-        Vector2 rayPositionRight = new Vector2(colliderX, bc.transform.position.y);
-        rayJumpHits[0] = Physics2D.Raycast(bc.transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
-        rayJumpHits[1] = Physics2D.Raycast(rayPositionRight, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        rayJumpHits[0] = Physics2D.Raycast(rayLeft, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        rayJumpHits[1] = Physics2D.Raycast(rayRight, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        rayJumpHits[2] = Physics2D.Raycast(bc.transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+        Debug.DrawRay(rayLeft, Vector2.down, Color.blue);
+        Debug.DrawRay(rayRight, Vector2.down, Color.blue);
         Debug.DrawRay(bc.transform.position, Vector2.down, Color.blue);
-        Debug.DrawRay(rayPositionRight, Vector2.down, Color.blue);
-        
 
     }
 }
