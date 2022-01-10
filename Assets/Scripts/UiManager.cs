@@ -10,25 +10,23 @@ public class UiManager : MonoBehaviour
 
     public Image[] Heart;
 
-    private GameManager gameManager;
 
     private void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     private void Update()
     {
-        scoreText.text = gameManager.score.ToString();
+        scoreText.text = GameManager.score.ToString();
     }
 
-    public void SetHp(int heart, int maxHeart)
+    public void SetHp()
     {
-        for(int i = 0; i<maxHeart; ++i)
+        for(int i = 0; i<GameManager.maxHp; ++i)
         {
             Heart[i].color = new Color(1, 1, 1, 0);
         }
-        for (int i = 0; i < heart; ++i)
+        for (int i = 0; i < GameManager.curHp; ++i)
         {
             Heart[i].color = new Color(1, 1, 1, 1);
         }

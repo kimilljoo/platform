@@ -14,7 +14,7 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Ground"))
+        if(collision.gameObject.CompareTag("Wall"))
         {
             Destroy(gameObject);
         }
@@ -22,7 +22,7 @@ public class BulletController : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector2.right * Time.deltaTime * speed);
+        transform.Translate(new Vector2(player.transform.localScale.x,0) * Time.deltaTime * speed);
 
     }
 }

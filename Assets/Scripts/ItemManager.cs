@@ -5,12 +5,10 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     private PlayerManager player;
-    private GameManager gameManager;
     private UiManager uiManager;
     private void Start()
     {
         player = GameObject.Find("Player").GetComponent<PlayerManager>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -19,23 +17,28 @@ public class ItemManager : MonoBehaviour
         {
             if(gameObject.name == "Coin")
             {
-                gameManager.score += 500;
-                Debug.Log(gameManager.score);
+                GameManager.score += 500;
+                Debug.Log(GameManager.score);
+                Destroy(gameObject);
+            }
+            else if(gameObject.name == "Star")
+            {
+                player.isStar = true;
                 Destroy(gameObject);
             }
             else if(gameObject.name == "Heart")
             {
-                if(player.maxHp == player.curHp)
+                if(GameManager.maxHp == GameManager.curHp)
                 {
-                    gameManager.score += 500;
+                    GameManager.score += 500;
                     Destroy(gameObject);
 
                 }
                 else
                 {
-                    ++player.curHp;
-                    Debug.Log(player.curHp);
-                    uiManager.SetHp(player.curHp, player.maxHp);
+                    ++GameManager.curHp;
+                    Debug.Log(GameManager.curHp);
+                    uiManager.SetHp();
                     Destroy(gameObject);
                 }
             }

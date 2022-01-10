@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
 
-    [SerializeField]
-    private GameObject bullet;
 
     [SerializeField]
     private GameObject shootPoint;
+
+    [SerializeField]
+    private GameObject bullet;
 
     private float moveSpeed = 3.0f;
 
@@ -20,12 +22,9 @@ public class PlayerManager : MonoBehaviour
 
     private Animator animator;
 
-    private SpriteRenderer spriteRenderer;
+    public bool isJumping = false;
 
-    private bool isJumping = false;
-
-    public int maxHp = 3;
-    public int curHp;
+    SpriteRenderer spriteColor;
 
     private float curDamageDelayTime = 0.0f;
     private const float maxDamageDelayTime = 1.0f;
@@ -34,39 +33,46 @@ public class PlayerManager : MonoBehaviour
 
     private UiManager uiManager;
 
+    public bool isStar;
+
     private void Start()
     {
 
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
-        curHp = maxHp;
+        spriteColor = GetComponent<SpriteRenderer>();
 
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
 
-        if(collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime)
+        if((collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime ) && isStar == false)
         {
-            --curHp;
-            uiManager.SetHp(curHp, maxHp);
-            curDamageDelayTime = 0.0f;
+            giveDamage();
         }
         if(collision.gameObject.CompareTag("DeathZone"))
         {
-            --curHp;
-            uiManager.SetHp(curHp, maxHp);
+            giveDamage();
             transform.position = new Vector3(0, 0, -1);
         }
-        Debug.Log(curHp);
+        Debug.Log(GameManager.curHp);
 
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("Monster") && isJumping == true)
+        {
+            isJumping = false;
+            Jump();
+        }
+        else if(collision.gameObject.CompareTag("Monster") && isStar == false)
+        {
+            giveDamage();
+        }
 
         if ((rayJumpHits[0].collider != null || rayJumpHits[1].collider != null) || rayJumpHits[2].collider != null)
         {
@@ -99,40 +105,42 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            if (isJumping == false)
-            {
-                animator.SetBool("isJump", true);
-                animator.SetBool("isMove", false);
-                isJumping = true;
-                rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-                Debug.Log(isJumping);
-            }
-            else return;
+            Jump();
         }
+        
     }
 
     private void Update()
     {
+        if (isStar)
+        {
+            spriteColor.color = new Color(Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), 1);
+        }
+        if(Input.GetKey(KeyCode.LeftControl))
+        {
+            Instantiate(bullet,shootPoint.transform.position,Quaternion.identity);
+        }
+
+        Debug.Log(isJumping);
         Vector2 rayLeft = new Vector2(bc.transform.position.x - (bc.size.x/2)-0.039f, bc.transform.position.y);
         Vector2 rayRight = new Vector2(bc.transform.position.x + (bc.size.x/2), bc.transform.position.y);
 
-        float moveHorizontal = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            Instantiate(bullet, shootPoint.transform.position, Quaternion.identity);
+            transform.localScale = new Vector3(1, 1, 1);
         }
-
-        if(Input.GetButtonDown("Horizontal"))
+        else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            spriteRenderer.flipX = moveHorizontal < 0;
+            transform.localScale = new Vector3(-1, 1, 1);
         }
         
         curDamageDelayTime += Time.deltaTime;
 
-        if(curHp == 0)
+        if(GameManager.curHp == 0)
         {
             Destroy(gameObject);
+            SceneManager.LoadScene(4);
         }
         
         rayJumpHits[0] = Physics2D.Raycast(rayLeft, Vector2.down, 1, LayerMask.GetMask("Ground"));
@@ -142,5 +150,24 @@ public class PlayerManager : MonoBehaviour
         Debug.DrawRay(rayRight, Vector2.down, Color.blue);
         Debug.DrawRay(bc.transform.position, Vector2.down, Color.blue);
 
+    }
+    public void giveDamage()
+    {
+        --GameManager.curHp;
+        uiManager.SetHp();
+        curDamageDelayTime = 0.0f;
+    }
+    public void Jump()
+    {
+        if (isJumping == false)
+        {
+            animator.SetBool("isJump", true);
+            animator.SetBool("isMove", false);
+            isJumping = true;
+            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            Debug.Log(isJumping);
+        }
+        else return;
+        
     }
 }

@@ -8,6 +8,8 @@ TagManager:
   - Trap
   - DeathZone
   - Bounce
+  - Monster
+  - Wall
   layers:
   - Default
   - TransparentFX
