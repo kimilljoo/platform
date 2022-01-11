@@ -20,15 +20,15 @@ public class MonsterManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DeathZone"))
         {
-            GameManager.score += 1000;
             Destroy(gameObject);
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player") && playerManager.isJumping == true)
+        if((collision.gameObject.CompareTag("Player") && playerManager.isJumping == true) || (collision.gameObject.CompareTag("Player") && playerManager.isStar == true))
         {
+            GameManager.score += 1000;
             Destroy(gameObject);
         }
         

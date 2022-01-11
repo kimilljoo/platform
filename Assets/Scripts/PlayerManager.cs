@@ -35,9 +35,10 @@ public class PlayerManager : MonoBehaviour
 
     public bool isStar;
 
+    private int dir = 1;
+
     private void Start()
     {
-
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
@@ -110,11 +111,38 @@ public class PlayerManager : MonoBehaviour
         
     }
 
+    private IEnumerator StarEffect()
+    {
+        spriteColor.color = new Color(Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), 1);
+        for (float i = 1.0f; i <= 1.5f; i+=0.001f)
+        {
+            transform.localScale = new Vector3(dir * i, i);
+            yield return null;
+        }
+        
+        yield return new WaitForSeconds(5f);
+        spriteColor.color = new Color(1.0f, 1.0f, 1.0f);
+        transform.localScale = new Vector3(dir, 1);
+        isStar = false;
+    }
+
     private void Update()
     {
+        Vector2 rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2), bc.transform.position.y);
+        Vector2 rayRight = new Vector2(bc.transform.position.x + (bc.size.x / 2), bc.transform.position.y);
+        transform.localScale = new Vector3(dir, 1);
         if (isStar)
         {
-            spriteColor.color = new Color(Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), 1);
+            rayRight = new Vector2(bc.transform.position.x + (bc.size.x / 2), bc.transform.position.y * (-1.5f));
+            rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2), bc.transform.position.y*(-1.5f));
+            StartCoroutine("StarEffect");
+        }
+        else
+        {
+            
+            rayRight = new Vector2(bc.transform.position.x + (bc.size.x / 2), bc.transform.position.y);
+            rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2) , bc.transform.position.y);
+            StopCoroutine("StarEffect");
         }
         if(Input.GetKey(KeyCode.LeftControl))
         {
@@ -122,17 +150,16 @@ public class PlayerManager : MonoBehaviour
         }
 
         Debug.Log(isJumping);
-        Vector2 rayLeft = new Vector2(bc.transform.position.x - (bc.size.x/2)-0.039f, bc.transform.position.y);
-        Vector2 rayRight = new Vector2(bc.transform.position.x + (bc.size.x/2), bc.transform.position.y);
+        
 
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.localScale = new Vector3(1, 1, 1);
+            dir = 1;
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.localScale = new Vector3(-1, 1, 1);
+            dir = -1;
         }
         
         curDamageDelayTime += Time.deltaTime;
@@ -142,10 +169,11 @@ public class PlayerManager : MonoBehaviour
             Destroy(gameObject);
             SceneManager.LoadScene(4);
         }
-        
+
         rayJumpHits[0] = Physics2D.Raycast(rayLeft, Vector2.down, 1, LayerMask.GetMask("Ground"));
         rayJumpHits[1] = Physics2D.Raycast(rayRight, Vector2.down, 1, LayerMask.GetMask("Ground"));
         rayJumpHits[2] = Physics2D.Raycast(bc.transform.position, Vector2.down, 1, LayerMask.GetMask("Ground"));
+
         Debug.DrawRay(rayLeft, Vector2.down, Color.blue);
         Debug.DrawRay(rayRight, Vector2.down, Color.blue);
         Debug.DrawRay(bc.transform.position, Vector2.down, Color.blue);
