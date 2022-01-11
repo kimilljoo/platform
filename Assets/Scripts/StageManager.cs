@@ -14,17 +14,20 @@ public class StageManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        switch(SceneManager.GetActiveScene().buildIndex)
+        if(collision.gameObject.CompareTag("Player"))
         {
-            case 1:
-                SceneManager.LoadScene(2);
-                uiManager.SetHp();
-                Debug.Log(GameManager.curHp);
-                break;
-            case 2:
-                SceneManager.LoadScene(3);
-                break;
+            switch(SceneManager.GetActiveScene().buildIndex)
+            {
+                case 1:
+                    SceneManager.LoadScene(2);
+                    uiManager.SetHp();
+                    Debug.Log(GameManager.curHp);
+                    break;
+                case 2:
+                    SceneManager.LoadScene(3);
+                    break;
 
+            }
         }
     }
 }

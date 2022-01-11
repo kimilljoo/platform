@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MonsterManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject fakeBall;
+
     private int[] randDir = { -1, 1 };
     private int randNum = 0;
     private float moveSpeed = 2.0f;
@@ -29,7 +32,12 @@ public class MonsterManager : MonoBehaviour
         if((collision.gameObject.CompareTag("Player") && playerManager.isJumping == true) || (collision.gameObject.CompareTag("Player") && playerManager.isStar == true))
         {
             GameManager.score += 1000;
+            if(gameObject.name == "Armadillo")
+            {
+                Instantiate(fakeBall, gameObject.transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
+            
         }
         
         if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Monster"))

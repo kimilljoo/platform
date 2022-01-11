@@ -15,32 +15,35 @@ public class ItemManager : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if(gameObject.name == "Coin")
+            switch(gameObject.tag)
             {
-                GameManager.score += 500;
-                Debug.Log(GameManager.score);
-                Destroy(gameObject);
-            }
-            else if(gameObject.name == "Star")
-            {
-                player.isStar = true;
-                Destroy(gameObject);
-            }
-            else if(gameObject.name == "Heart")
-            {
-                if(GameManager.maxHp == GameManager.curHp)
-                {
+                case "Coin":
                     GameManager.score += 500;
+                    Debug.Log(GameManager.score);
                     Destroy(gameObject);
+                    break;
 
-                }
-                else
-                {
-                    ++GameManager.curHp;
-                    Debug.Log(GameManager.curHp);
-                    uiManager.SetHp();
+                case "Star":
+                    GameManager.score += 1500;
+                    player.isStar = true;
                     Destroy(gameObject);
-                }
+                    break;
+                case "Heart":
+                    if (GameManager.maxHp == GameManager.curHp)
+                    {
+                        GameManager.score += 500;
+                        Destroy(gameObject);
+
+                    }
+                    else
+                    {
+                        ++GameManager.curHp;
+                        Debug.Log(GameManager.curHp);
+                        uiManager.SetHp();
+                        Destroy(gameObject);
+                    }
+                    break;
+
             }
         }
     }

@@ -10,6 +10,9 @@ TagManager:
   - Bounce
   - Monster
   - Wall
+  - Coin
+  - Heart
+  - Star
   layers:
   - Default
   - TransparentFX

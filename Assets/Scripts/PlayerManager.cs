@@ -35,7 +35,13 @@ public class PlayerManager : MonoBehaviour
 
     public bool isStar;
 
-    private int dir = 1;
+    public bool isBall;
+
+    public int countJump = 0;
+
+    public bool isStepable = false;
+
+    public int dir = 1;
 
     private void Start()
     {
@@ -44,7 +50,7 @@ public class PlayerManager : MonoBehaviour
         animator = GetComponent<Animator>();
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
         spriteColor = GetComponent<SpriteRenderer>();
-
+        shootPoint.gameObject.SetActive(false);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -67,6 +73,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Monster") && isJumping == true)
         {
+            ++countJump;
             isJumping = false;
             Jump();
         }
@@ -78,7 +85,11 @@ public class PlayerManager : MonoBehaviour
         if ((rayJumpHits[0].collider != null || rayJumpHits[1].collider != null) || rayJumpHits[2].collider != null)
         {
             if ((rayJumpHits[0].distance <= 0.5f || rayJumpHits[1].distance <= 0.5f)|| rayJumpHits[2].distance <= 0.5f)
-            {
+            { 
+                if(countJump>0)
+                {
+                    isStepable = true;
+                }
                 Debug.Log("ray dis left : " + rayJumpHits[0].distance);
                 Debug.Log("ray dis right : " + rayJumpHits[1].distance);
                 Debug.Log("ray dis player : " + rayJumpHits[2].distance);
@@ -128,13 +139,17 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if(isBall == true)
+        {
+            shootPoint.gameObject.SetActive(true);
+        }
         Vector2 rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2), bc.transform.position.y);
         Vector2 rayRight = new Vector2(bc.transform.position.x + (bc.size.x / 2), bc.transform.position.y);
         transform.localScale = new Vector3(dir, 1);
         if (isStar)
         {
-            rayRight = new Vector2(bc.transform.position.x + (bc.size.x / 2), bc.transform.position.y * (-1.5f));
-            rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2), bc.transform.position.y*(-1.5f));
+            rayRight = new Vector2(bc.transform.position.x + (bc.size.x / 2), bc.transform.position.y-1.5f);
+            rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2), bc.transform.position.y-1.5f);
             StartCoroutine("StarEffect");
         }
         else
@@ -144,9 +159,14 @@ public class PlayerManager : MonoBehaviour
             rayLeft = new Vector2(bc.transform.position.x - (bc.size.x / 2) , bc.transform.position.y);
             StopCoroutine("StarEffect");
         }
-        if(Input.GetKey(KeyCode.LeftControl))
+        if(Input.GetKey(KeyCode.LeftControl) && isBall == true) 
         {
             Instantiate(bullet,shootPoint.transform.position,Quaternion.identity);
+            isBall = false;
+        }
+        else if(isBall == false)
+        {
+            shootPoint.gameObject.SetActive(false);
         }
 
         Debug.Log(isJumping);
