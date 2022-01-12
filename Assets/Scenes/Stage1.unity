@@ -1509,8 +1509,8 @@ MonoBehaviour:
   isJumping: 0
   isStar: 0
   isBall: 0
+  countJump: 0
   isStepable: 0
-  jumpCount: 0
   dir: 1
 --- !u!95 &510282056
 Animator:
@@ -3946,7 +3946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1587329505
 Transform:
   m_ObjectHideFlags: 0

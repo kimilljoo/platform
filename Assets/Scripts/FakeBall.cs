@@ -10,9 +10,11 @@ public class FakeBall : MonoBehaviour
 
     public bool isDestroy;
 
+    private bool isStepable;
     private void Awake()
     {
         player = GameObject.Find("Player").GetComponent<PlayerManager>();
+        StartCoroutine("OnStep");
 
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -25,10 +27,8 @@ public class FakeBall : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if((collision.gameObject.CompareTag("Player") && player.isJumping == true ) && player.isStepable == true)
+        if((collision.gameObject.CompareTag("Player") && player.isJumping == true ) && isStepable == true)
         {
-            player.isStepable = false;
-            player.countJump = 0;
             Instantiate(Ball, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
@@ -36,11 +36,19 @@ public class FakeBall : MonoBehaviour
 
     private void Update()
     {
+        if(isStepable == true)
+        {
+            StopCoroutine("OnStep");
+        }
         if (Input.GetKey(KeyCode.DownArrow))
         {
             isDestroy = true;
         }
         else isDestroy = false;
     }
-
+    private IEnumerator OnStep()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isStepable = true;
+    }
 }

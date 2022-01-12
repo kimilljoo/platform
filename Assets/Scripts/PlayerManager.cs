@@ -37,10 +37,6 @@ public class PlayerManager : MonoBehaviour
 
     public bool isBall;
 
-    public int countJump = 0;
-
-    public bool isStepable = false;
-
     public int dir = 1;
 
     private void Start()
@@ -73,7 +69,6 @@ public class PlayerManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Monster") && isJumping == true)
         {
-            ++countJump;
             isJumping = false;
             Jump();
         }
@@ -86,10 +81,7 @@ public class PlayerManager : MonoBehaviour
         {
             if ((rayJumpHits[0].distance <= 0.5f || rayJumpHits[1].distance <= 0.5f)|| rayJumpHits[2].distance <= 0.5f)
             { 
-                if(countJump>0)
-                {
-                    isStepable = true;
-                }
+            
                 Debug.Log("ray dis left : " + rayJumpHits[0].distance);
                 Debug.Log("ray dis right : " + rayJumpHits[1].distance);
                 Debug.Log("ray dis player : " + rayJumpHits[2].distance);
@@ -97,7 +89,6 @@ public class PlayerManager : MonoBehaviour
                 animator.SetBool("isJump", false);
             }
         }
-
     }
 
     private void FixedUpdate()//¿Ãµø 
@@ -125,7 +116,7 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator StarEffect()
     {
         spriteColor.color = new Color(Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), Random.Range(0.1f, 1.1f), 1);
-        for (float i = 1.0f; i <= 1.5f; i+=0.001f)
+        for (float i = 1.0f; i <= 1.5f; i+=0.005f)
         {
             transform.localScale = new Vector3(dir * i, i);
             yield return null;
