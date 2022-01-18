@@ -77,11 +77,16 @@ public class PlayerManager : MonoBehaviour
             giveDamage();
         }
 
+        
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
         if ((rayJumpHits[0].collider != null || rayJumpHits[1].collider != null) || rayJumpHits[2].collider != null)
         {
-            if ((rayJumpHits[0].distance <= 0.5f || rayJumpHits[1].distance <= 0.5f)|| rayJumpHits[2].distance <= 0.5f)
-            { 
-            
+            if ((rayJumpHits[0].distance <= 0.5f || rayJumpHits[1].distance <= 0.5f) || rayJumpHits[2].distance <= 0.5f)
+            {
+
                 Debug.Log("ray dis left : " + rayJumpHits[0].distance);
                 Debug.Log("ray dis right : " + rayJumpHits[1].distance);
                 Debug.Log("ray dis player : " + rayJumpHits[2].distance);
@@ -90,6 +95,9 @@ public class PlayerManager : MonoBehaviour
             }
         }
     }
+
+
+
 
     private void FixedUpdate()//ÀÌµ¿ 
     {
