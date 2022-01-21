@@ -14,9 +14,17 @@ public class CameraControl : MonoBehaviour
         targetTransform = target.transform;
     }
 
-    // Update is called once per frame
+    private void Update()
+    {
+    }
+
     private void LateUpdate()
     {
+        Move();
+    }
+    private void Move()
+    {
+
         if(target == null)
         {
             transform.position = new Vector3(0, 0, transform.position.z);

@@ -29,7 +29,7 @@ public class MonsterManager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if((collision.gameObject.CompareTag("Player") && playerManager.isJumping == true) || (collision.gameObject.CompareTag("Player") && playerManager.isStar == true))
+        if((collision.gameObject.CompareTag("Player") && playerManager.CheckJump()== true) || (collision.gameObject.CompareTag("Player") && playerManager.isStar == true))
         {
             GameManager.score += 1000;
             if(gameObject.name == "Armadillo")

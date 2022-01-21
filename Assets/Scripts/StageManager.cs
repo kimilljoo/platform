@@ -9,6 +9,11 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
     }
 
@@ -16,18 +21,24 @@ public class StageManager : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            switch(SceneManager.GetActiveScene().buildIndex)
-            {
-                case 1:
-                    SceneManager.LoadScene(2);
-                    uiManager.SetHp();
-                    Debug.Log(GameManager.curHp);
-                    break;
-                case 2:
-                    SceneManager.LoadScene(3);
-                    break;
-
-            }
+            ChangeScene();
         }
     }
+
+    private void ChangeScene()
+    {
+        switch (SceneManager.GetActiveScene().buildIndex)
+        {
+            case 1:
+                SceneManager.LoadScene(2);
+                uiManager.SetHp();
+                Debug.Log(GameManager.curHp);
+                break;
+            case 2:
+                SceneManager.LoadScene(3);
+                break;
+
+        }
+    }
+
 }

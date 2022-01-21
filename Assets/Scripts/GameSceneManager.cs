@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameSceneManager : MonoBehaviour
 {
+
     public void StartButton()
     {
         SceneManager.LoadScene(1);
@@ -13,6 +14,7 @@ public class GameSceneManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
         GameManager.score = 0;
+        
     }
     public void QuitButton()
     {
