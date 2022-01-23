@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField]
+    private LayerMask groundLayer;
+    private BoxCollider2D boxCollider2D;
+    private bool isGrounded;
+    private Vector3 footPosition;
+
     private Action PlayerAction;
 
     [SerializeField]
@@ -27,6 +33,8 @@ public class PlayerManager : MonoBehaviour
     private float curDamageDelayTime = 0.0f;
     private const float maxDamageDelayTime = 1.0f;
 
+    private float groundLength = 0.45f;
+
     private UiManager uiManager;
 
     public bool isStar;
@@ -34,11 +42,10 @@ public class PlayerManager : MonoBehaviour
     public bool isBall;
     public bool isJump;
 
-    public float rayDist = 0.4f;
 
     public int dir = 1;
 
-    
+
     private void Start()
     {
         Init();
@@ -52,6 +59,7 @@ public class PlayerManager : MonoBehaviour
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
         spriteColor = GetComponent<SpriteRenderer>();
         shootPoint.gameObject.SetActive(false);
+        boxCollider2D = transform.GetComponent<BoxCollider2D>();
     }
 
     private void InitDeli()
@@ -67,6 +75,7 @@ public class PlayerManager : MonoBehaviour
         PlayerAction();
         AddDamageTime();
         ShootingBall();
+
     }
     public void Turn()
     {
@@ -82,18 +91,21 @@ public class PlayerManager : MonoBehaviour
     }
     private void Jump()
     {
-        if(Input.GetKey(KeyCode.Space) && isJump == false)
+        if(Input.GetKey(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            rb.velocity = Vector2.up * jumpPower;
+            //rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             animator.SetBool("isJump", true);
             isJump = true;
         }
     }
-    private void CheckGround()
-    {
-        isJump = false;
-        animator.SetBool("isJump", false);
-    }
+    //private bool CheckGround()
+    //{
+    //    RaycastHit2D raycastHit2d = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down * .1f,1 << LayerMask.NameToLayer("Ground"));
+    //    Debug.Log(raycastHit2d.collider);
+    //    return raycastHit2d.collider != null;
+    //}
+
     public bool CheckJump()
     {
         bool isJump;
@@ -114,12 +126,12 @@ public class PlayerManager : MonoBehaviour
         if (isStar)
         {
             StartCoroutine("StarEffect");
-            rayDist = 1.0f;
+            
         }
         else
         {
             StopCoroutine("StarEffect");
-            rayDist = 0.4f;
+            
         }
     }
     private IEnumerator StarEffect()
@@ -167,6 +179,18 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+
+        Bounds bounds = boxCollider2D.bounds;
+
+        footPosition = new Vector2(bounds.center.x, bounds.min.y);
+
+        isGrounded = Physics2D.OverlapCircle(footPosition, 0.1f, groundLayer);
+
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(footPosition, 0.1f);
     }
     private void Move()
     {
@@ -187,10 +211,10 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
-        {
-            CheckGround();
-        }
+        //if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
+        //{
+        //    CheckGround();
+        //}
         if ((collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime ) && isStar == false)
         {
             giveDamage();
