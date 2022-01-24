@@ -9,7 +9,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayer;
     private BoxCollider2D boxCollider2D;
-    private bool isGrounded;
+    public bool isGrounded;
     private Vector3 footPosition;
 
     private Action PlayerAction;
@@ -64,7 +64,6 @@ public class PlayerManager : MonoBehaviour
 
     private void InitDeli()
     {
-        PlayerAction += Jump;
         PlayerAction += Star;
         PlayerAction += Turn;
         PlayerAction += Death;
@@ -72,6 +71,10 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        {
+            Jump();
+        }
         PlayerAction();
         AddDamageTime();
         ShootingBall();
@@ -89,22 +92,27 @@ public class PlayerManager : MonoBehaviour
         }
         transform.localScale = new Vector3(dir, 1);
     }
-    private void Jump()
+    public void Jump()
     {
-        if(Input.GetKey(KeyCode.Space) && isGrounded)
-        {
-            rb.velocity = Vector2.up * jumpPower;
-            //rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-            animator.SetBool("isJump", true);
-            isJump = true;
-        }
+       rb.velocity = Vector2.up * jumpPower;
+       animator.SetBool("isJump", true);
+       isJump = true;
+    
     }
-    //private bool CheckGround()
-    //{
-    //    RaycastHit2D raycastHit2d = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down * .1f,1 << LayerMask.NameToLayer("Ground"));
-    //    Debug.Log(raycastHit2d.collider);
-    //    return raycastHit2d.collider != null;
-    //}
+    private void CheckGround()
+    {
+        Bounds bounds = boxCollider2D.bounds;
+
+        footPosition = new Vector2(bounds.center.x, bounds.min.y);
+
+        isGrounded = Physics2D.OverlapCircle(footPosition, 0.1f, groundLayer);
+
+        if(isGrounded)
+        {
+            animator.SetBool("isJump", false);
+        }
+
+    }
 
     public bool CheckJump()
     {
@@ -180,11 +188,7 @@ public class PlayerManager : MonoBehaviour
     {
         Move();
 
-        Bounds bounds = boxCollider2D.bounds;
-
-        footPosition = new Vector2(bounds.center.x, bounds.min.y);
-
-        isGrounded = Physics2D.OverlapCircle(footPosition, 0.1f, groundLayer);
+        CheckGround();
 
     }
     private void OnDrawGizmos()
@@ -211,10 +215,6 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        //if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Wall"))
-        //{
-        //    CheckGround();
-        //}
         if ((collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime ) && isStar == false)
         {
             giveDamage();
@@ -227,27 +227,23 @@ public class PlayerManager : MonoBehaviour
         uiManager.SetHp();
         curDamageDelayTime = 0.0f;
     }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        isJump = true;
-    }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("DeathZone"))
         {
             Fall();
         }
-        if (collision.gameObject.CompareTag("Monster") && CheckJump())
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Monster") && isGrounded==false)
         {
-            isJump = false;
-            rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-            animator.SetBool("isJump", true);
-            isJump = true;
+            Jump();
         }
-        //else if(collision.gameObject.CompareTag("Monster") && isStar == false)
-        //{
-        //    giveDamage();
-        //}
+        else if(collision.gameObject.CompareTag("Monster") && isStar == false)
+        {
+            giveDamage();
+        }
     }
     private void Fall()
     {
