@@ -45,7 +45,7 @@ public class PlayerManager : MonoBehaviour
 
     public int dir = 1;
 
-
+    public bool isTrap = false;
     private void Start()
     {
         Init();
@@ -60,6 +60,7 @@ public class PlayerManager : MonoBehaviour
         spriteColor = GetComponent<SpriteRenderer>();
         shootPoint.gameObject.SetActive(false);
         boxCollider2D = transform.GetComponent<BoxCollider2D>();
+        curDamageDelayTime = maxDamageDelayTime;
     }
 
     private void InitDeli()
@@ -78,6 +79,11 @@ public class PlayerManager : MonoBehaviour
         PlayerAction();
         AddDamageTime();
         ShootingBall();
+
+        if(curDamageDelayTime >= maxDamageDelayTime && isTrap == true)
+        {
+            giveDamage();
+        }
 
     }
     public void Turn()
@@ -215,10 +221,10 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if ((collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime ) && isStar == false)
-        {
-            giveDamage();
-        }
+        //if ((collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime ) && isStar == false)
+        //{
+        //    giveDamage();
+        //}
 
     }
     public void giveDamage()
@@ -233,7 +239,23 @@ public class PlayerManager : MonoBehaviour
         {
             Fall();
         }
+
+        if(collision.gameObject.CompareTag("Trap") && isStar == false)
+        {
+            isTrap = true;
+        }
+
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Trap") && isStar == false)
+        {
+            isTrap = false;
+        }
+    }
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Monster") && isGrounded==false)
@@ -250,14 +272,6 @@ public class PlayerManager : MonoBehaviour
         giveDamage();
         transform.position = new Vector3(0, 0, -1);
     }
-
-
-    
-
-
-
-
-
 
 
 

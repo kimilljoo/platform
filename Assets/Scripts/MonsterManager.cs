@@ -46,6 +46,11 @@ public class MonsterManager : MonoBehaviour
         }
         
     
+        if(collision.gameObject.CompareTag("Ball"))
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     private void FixedUpdate()
