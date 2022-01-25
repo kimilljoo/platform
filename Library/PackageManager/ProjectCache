@@ -5,7 +5,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637785868486201391
+      ticks: 637786715393271525
     m_Hash: 1181560468
   m_LockFileStatus:
     m_FilePath: C:/Users/FusionSoftware/Desktop/platform/Packages/packages-lock.json
@@ -13,7 +13,7 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637785868486211371
+      ticks: 637786715393271525
     m_Hash: 1617526230
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
