@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 492}
   m_MaxSize: {x: 10000, y: 10000}
@@ -121,10 +121,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 911, y: 442}
-  m_MaxSize: {x: 22006, y: 10021}
+  m_MinSize: {x: 908, y: 442}
+  m_MaxSize: {x: 22003, y: 10000}
   vertical: 0
-  controlID: 45800
+  controlID: 5961
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 442}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 45731
+  controlID: 6010
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -407,9 +407,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 70.77961, y: 0.6116865, z: -36.88945}
+    m_Target: {x: 76.056175, y: 1.3936485, z: -5.3645806}
     speed: 2
-    m_Value: {x: 70.77961, y: 0.6116865, z: -36.88945}
+    m_Value: {x: 76.056175, y: 1.3936485, z: -5.3645806}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -460,9 +460,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 5.4604244
+    m_Target: 2.132722
     speed: 2
-    m_Value: 5.4604244
+    m_Value: 2.132722
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -722,7 +722,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 80fbfeffeefbfeff22fcfeff12fefeff5000ffff8c00ffffd802ffffba09ffffd00affffb40fffff9811ffffd871ffff0c72ffff6abdffff28fbffffa6430000b4430000d643000002440000489d0000
+      m_ExpandedIDs: 8cd9ffff48e7ffff88edffff08fbffff3c670000a486000024a10000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -784,22 +784,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Music
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Music
+  - Assets/Scenes
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\FusionSoftware\Desktop\platform
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 7c470000
-    m_LastClickedID: 18300
-    m_ExpandedIDs: 000000004c47000000ca9a3b
+    m_SelectedIDs: 16440000
+    m_LastClickedID: 17430
+    m_ExpandedIDs: 000000000644000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -827,7 +827,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000004c47000000ca9a3b
+    m_ExpandedIDs: 000000000644000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
