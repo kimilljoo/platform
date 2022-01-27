@@ -22,7 +22,7 @@ public class PlayerManager : MonoBehaviour
 
     private float moveSpeed = 3.0f;
 
-    private float jumpPower = 5.5f;
+    private float jumpPower = 5.3f;
 
     private Rigidbody2D rb;
 
@@ -30,14 +30,10 @@ public class PlayerManager : MonoBehaviour
 
     SpriteRenderer spriteColor;
 
-    private float curDamageDelayTime = 0.0f;
-    private const float maxDamageDelayTime = 1.0f;
-
-    private float groundLength = 0.45f;
-
     private UiManager uiManager;
 
     public bool isStar;
+    public bool isInvincibility;
 
     public bool isBall;
     public bool isJump;
@@ -60,7 +56,6 @@ public class PlayerManager : MonoBehaviour
         spriteColor = GetComponent<SpriteRenderer>();
         shootPoint.gameObject.SetActive(false);
         boxCollider2D = transform.GetComponent<BoxCollider2D>();
-        curDamageDelayTime = maxDamageDelayTime;
     }
 
     private void InitDeli()
@@ -80,9 +75,13 @@ public class PlayerManager : MonoBehaviour
         AddDamageTime();
         ShootingBall();
 
-        if(curDamageDelayTime >= maxDamageDelayTime && isTrap == true)
+        if (isTrap == true && isInvincibility == false)
         {
             giveDamage();
+        }
+        if (isInvincibility == false)
+        {
+            StopCoroutine(Invincibility());
         }
 
     }
@@ -111,7 +110,7 @@ public class PlayerManager : MonoBehaviour
 
         footPosition = new Vector2(bounds.center.x, bounds.min.y);
 
-        isGrounded = Physics2D.OverlapCircle(footPosition, 0.1f, groundLayer);
+        isGrounded = Physics2D.OverlapCircle(footPosition, 0.12f, groundLayer);
 
         if(isGrounded)
         {
@@ -172,7 +171,6 @@ public class PlayerManager : MonoBehaviour
     }
     private void AddDamageTime()
     {
-        curDamageDelayTime += Time.deltaTime;
     }
     private void ShootingBall()
     {
@@ -200,7 +198,7 @@ public class PlayerManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(footPosition, 0.1f);
+        Gizmos.DrawSphere(footPosition, 0.12f);
     }
     private void Move()
     {
@@ -221,17 +219,17 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        //if ((collision.gameObject.CompareTag("Trap") && curDamageDelayTime >= maxDamageDelayTime ) && isStar == false)
-        //{
-        //    giveDamage();
-        //}
+        if ((collision.gameObject.CompareTag("Trap")&& isStar == false) && isInvincibility == false)
+        {
+            giveDamage();
+        }
 
     }
     public void giveDamage()
     {
         --GameManager.curHp;
         uiManager.SetHp();
-        curDamageDelayTime = 0.0f;
+        StartCoroutine(Invincibility());
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -255,6 +253,13 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if ((collision.gameObject.CompareTag("Monster") && isStar == false) && isInvincibility == false)
+        {
+            giveDamage();
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -262,10 +267,7 @@ public class PlayerManager : MonoBehaviour
         {
             Jump();
         }
-        else if(collision.gameObject.CompareTag("Monster") && isStar == false)
-        {
-            giveDamage();
-        }
+        
     }
     private void Fall()
     {
@@ -274,7 +276,14 @@ public class PlayerManager : MonoBehaviour
     }
 
 
-
+    private IEnumerator Invincibility()
+    {
+        isInvincibility = true;
+        spriteColor.color = new Color(1.0f, 1.0f, 1.0f,0.6f);
+        yield return new WaitForSeconds(0.6f);
+        spriteColor.color = new Color(1.0f, 1.0f, 1.0f,1f);
+        isInvincibility = false;
+    }
 
 
 }

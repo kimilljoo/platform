@@ -40,7 +40,7 @@ public class MonsterManager : MonoBehaviour
             
         }
         
-        if(collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Monster"))
+        if((collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("Monster")))
         {
             randDir[randNum] *= -1;
         }
@@ -52,6 +52,7 @@ public class MonsterManager : MonoBehaviour
         }
 
     }
+
 
     private void FixedUpdate()
     {
