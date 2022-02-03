@@ -15,6 +15,7 @@ TagManager:
   - Star
   - Jump
   - Ball
+  - Bullet
   layers:
   - Default
   - TransparentFX
