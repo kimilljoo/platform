@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\StageManager.cs" />
     <Compile Include="Assets\Scripts\BallManager.cs" />
     <Compile Include="Assets\Scripts\FakeBall.cs" />
+    <Compile Include="Assets\Scripts\NavigationUi.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

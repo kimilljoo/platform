@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using TMPro;
 
 public class UiManager : MonoBehaviour
 {
@@ -13,16 +14,18 @@ public class UiManager : MonoBehaviour
     public int PanelSwitchNum;
 
     public Image[] Heart;
-
-
-    private void Start()
-    {
-    }
+    
+    public Toggle toggle;
 
     private void Update()
     {
         DrawText();
         SwitchPanel();
+        if(toggle != null)
+        {
+            ToggleAudio();
+
+        }
     }
 
     public void SwitchPanel()
@@ -45,6 +48,13 @@ public class UiManager : MonoBehaviour
         }
     }
 
+    public void ExitPanel()
+    {
+        ++PanelSwitchNum;
+        Time.timeScale = 1;
+        UIPanel.SetActive(false);
+    }
+
     public void DrawText()
     {
         scoreText.text = GameManager.score.ToString();
@@ -62,4 +72,10 @@ public class UiManager : MonoBehaviour
             Heart[i].color = new Color(1, 1, 1, 1);
         }
     }
+
+    public void ToggleAudio()
+    {
+        AudioListener.volume = toggle.isOn == true ? 1 : 0;
+    }
+
 }
