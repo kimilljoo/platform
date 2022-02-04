@@ -31,7 +31,7 @@ public class BossMonster : MonoBehaviour
 
     private IEnumerator Pattern1()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.8f);
         circle();
         patternNum = Random.Range(1, 3);
         StartCoroutine("Pattern" + patternNum.ToString());
