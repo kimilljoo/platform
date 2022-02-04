@@ -166,7 +166,7 @@ public class PlayerManager : MonoBehaviour
         if (GameManager.curHp == 0)
         {
             Destroy(gameObject);
-            SceneManager.LoadScene(4);
+            SceneManager.LoadScene(5);
         }
     }
     private void AddDamageTime()

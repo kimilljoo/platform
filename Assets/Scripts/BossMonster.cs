@@ -17,7 +17,13 @@ public class BossMonster : MonoBehaviour
         StartCoroutine("Pattern1");
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            GameManager.score += 10000;
+        }
+    }
 
     private void Update()
     {
@@ -27,8 +33,16 @@ public class BossMonster : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         circle();
-        //Instantiate(guidedBullet);
-        StartCoroutine("Pattern1");
+        patternNum = Random.Range(1, 3);
+        StartCoroutine("Pattern" + patternNum.ToString());
+    }
+
+    private IEnumerator Pattern2()
+    {
+        yield return new WaitForSeconds(1f);
+        Instantiate(guidedBullet);
+        patternNum = Random.Range(1, 3);
+        StartCoroutine("Pattern" + patternNum.ToString());
     }
 
     public void circle()
