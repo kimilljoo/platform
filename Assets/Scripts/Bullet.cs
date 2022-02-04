@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float speed = 10f;
+    public float speed = 5f;
     private void Start()
     {
         Destroy(gameObject, 2f);

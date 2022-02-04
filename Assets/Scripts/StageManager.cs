@@ -6,7 +6,7 @@ using UnityEngine;
 public class StageManager : MonoBehaviour
 {
     UiManager uiManager;
-
+    PlayerManager player;
     private void Start()
     {
         Init();
@@ -15,11 +15,13 @@ public class StageManager : MonoBehaviour
     private void Init()
     {
         uiManager = GameObject.Find("UIManager").GetComponent<UiManager>();
+        player = GameObject.Find("Player").GetComponent<PlayerManager>();
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("Player") && player.isInvincibility!=true)
         {
             ChangeScene();
         }

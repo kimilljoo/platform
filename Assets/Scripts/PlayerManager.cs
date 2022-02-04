@@ -243,6 +243,12 @@ public class PlayerManager : MonoBehaviour
             isTrap = true;
         }
 
+        if(collision.gameObject.CompareTag("Bullet") && isInvincibility == false)
+        {
+            giveDamage();
+            Destroy(collision.gameObject);
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -272,7 +278,14 @@ public class PlayerManager : MonoBehaviour
     private void Fall()
     {
         giveDamage();
-        transform.position = new Vector3(0, 0, -1);
+        if(SceneManager.GetActiveScene().buildIndex == 3)
+        {
+            transform.position = new Vector3(0, -3, -1);
+        }
+        else
+        {
+            transform.position = new Vector3(0, 0, -1);
+        }
     }
 
 
