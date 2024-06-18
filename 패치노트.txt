@@ -1,6 +1,4 @@
 01.11.2022
-<오늘의 추천곡>
-The Weeknd - I Heard You're Married
 
 <추가한 것>
 1. 무적 아이템
@@ -10,8 +8,6 @@ The Weeknd - I Heard You're Married
 1. 아르마딜로의 공
 
 01.10.2022
-<오늘의 추천곡>
-drake - God's Plan
 
 <수정한 것>
 1. 결승점 스프라이트
@@ -27,8 +23,7 @@ drake - God's Plan
 2. 거북이 몬스터(플레이어가 밟을 시 던질 수 있는 등껍질을 남기며 죽음)
 
 01.03.2022
-<오늘의 추천곡>
-Kanye West - 24
+
 
 <수정한 것>
 1. 스테이지 시스템
@@ -39,16 +34,13 @@ Kanye West - 24
 
 12.29.2021
 
-<오늘의 추천곡>
-아이유 - 겨울잠
 
 <수정한 것>
 1. 캐릭터 이동 시 떨림
 
 12.27.2021
 
-<오늘의 추천곡>
-창모 - Interlude
+
 
 <추가할 것>
 1. 게임 클리어
@@ -64,8 +56,6 @@ Kanye West - 24
 
 12.26.2021
 
-<오늘의 추천곡>
-Mariah Carey - All I Want For Christmas Is You
 
 <추가할 것>
 1. 맵 꾸미기
@@ -76,8 +66,7 @@ Mariah Carey - All I Want For Christmas Is You
 
 12.23.2021
 
-<오늘의 추천곡>
-RadioHead - Creep
+
 
 <추가할 것>
 1. UI
